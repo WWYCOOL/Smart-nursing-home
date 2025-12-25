@@ -88,7 +88,7 @@ smart-nursing-home
 - JDK 1.8+
 - MySQL 5.7+
 - Redis
-- Node.js
+- Node.js 18.0+
 - Maven
 
 ### 2. 后端启动
