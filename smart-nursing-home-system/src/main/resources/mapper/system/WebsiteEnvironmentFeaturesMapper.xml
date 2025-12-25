@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteEnvironmentFeaturesMapper">
+    
+    <resultMap type="WebsiteEnvironmentFeatures" id="WebsiteEnvironmentFeaturesResult">
+        <result property="featureId"    column="feature_id"    />
+        <result property="featureName"    column="feature_name"    />
+        <result property="featureIcon"    column="feature_icon"    />
+        <result property="featureDescription"    column="feature_description"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteEnvironmentFeaturesVo">
+        select feature_id, feature_name, feature_icon, feature_description, sort_order, status, create_by, create_time, update_by, update_time, remark from website_environment_features
+    </sql>
+
+    <select id="selectWebsiteEnvironmentFeaturesList" parameterType="WebsiteEnvironmentFeatures" resultMap="WebsiteEnvironmentFeaturesResult">
+        <include refid="selectWebsiteEnvironmentFeaturesVo"/>
+        <where>  
+            <if test="featureName != null  and featureName != ''"> and feature_name like concat('%', #{featureName}, '%')</if>
+            <if test="featureIcon != null  and featureIcon != ''"> and feature_icon = #{featureIcon}</if>
+            <if test="featureDescription != null  and featureDescription != ''"> and feature_description like concat('%', #{featureDescription}, '%')</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by sort_order asc, create_time desc
+    </select>
+    
+    <select id="selectWebsiteEnvironmentFeaturesByFeatureId" parameterType="Long" resultMap="WebsiteEnvironmentFeaturesResult">
+        <include refid="selectWebsiteEnvironmentFeaturesVo"/>
+        where feature_id = #{featureId}
+    </select>
+        
+    <insert id="insertWebsiteEnvironmentFeatures" parameterType="WebsiteEnvironmentFeatures" useGeneratedKeys="true" keyProperty="featureId">
+        insert into website_environment_features
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="featureName != null and featureName != ''">feature_name,</if>
+            <if test="featureIcon != null">feature_icon,</if>
+            <if test="featureDescription != null">feature_description,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="featureName != null and featureName != ''">#{featureName},</if>
+            <if test="featureIcon != null">#{featureIcon},</if>
+            <if test="featureDescription != null">#{featureDescription},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteEnvironmentFeatures" parameterType="WebsiteEnvironmentFeatures">
+        update website_environment_features
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="featureName != null and featureName != ''">feature_name = #{featureName},</if>
+            <if test="featureIcon != null">feature_icon = #{featureIcon},</if>
+            <if test="featureDescription != null">feature_description = #{featureDescription},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where feature_id = #{featureId}
+    </update>
+
+    <delete id="deleteWebsiteEnvironmentFeaturesByFeatureId" parameterType="Long">
+        delete from website_environment_features where feature_id = #{featureId}
+    </delete>
+
+    <delete id="deleteWebsiteEnvironmentFeaturesByFeatureIds" parameterType="String">
+        delete from website_environment_features where feature_id in 
+        <foreach item="featureId" collection="array" open="(" separator="," close=")">
+            #{featureId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+

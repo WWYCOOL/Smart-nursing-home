@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteNutritionFeaturesMapper">
+    
+    <resultMap type="WebsiteNutritionFeatures" id="WebsiteNutritionFeaturesResult">
+        <result property="featureId"    column="feature_id"    />
+        <result property="featureTitle"    column="feature_title"    />
+        <result property="featureIcon"    column="feature_icon"    />
+        <result property="featureDescription"    column="feature_description"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteNutritionFeaturesVo">
+        select feature_id, feature_title, feature_icon, feature_description, sort_order, status, create_by, create_time, update_by, update_time, remark from website_nutrition_features
+    </sql>
+
+    <select id="selectWebsiteNutritionFeaturesList" parameterType="WebsiteNutritionFeatures" resultMap="WebsiteNutritionFeaturesResult">
+        <include refid="selectWebsiteNutritionFeaturesVo"/>
+        <where>  
+            <if test="featureTitle != null  and featureTitle != ''"> and feature_title like concat('%', #{featureTitle}, '%')</if>
+            <if test="featureIcon != null  and featureIcon != ''"> and feature_icon = #{featureIcon}</if>
+            <if test="featureDescription != null  and featureDescription != ''"> and feature_description = #{featureDescription}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by sort_order
+    </select>
+    
+    <select id="selectWebsiteNutritionFeaturesByFeatureId" parameterType="Long" resultMap="WebsiteNutritionFeaturesResult">
+        <include refid="selectWebsiteNutritionFeaturesVo"/>
+        where feature_id = #{featureId}
+    </select>
+        
+    <insert id="insertWebsiteNutritionFeatures" parameterType="WebsiteNutritionFeatures" useGeneratedKeys="true" keyProperty="featureId">
+        insert into website_nutrition_features
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="featureTitle != null and featureTitle != ''">feature_title,</if>
+            <if test="featureIcon != null">feature_icon,</if>
+            <if test="featureDescription != null">feature_description,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="featureTitle != null and featureTitle != ''">#{featureTitle},</if>
+            <if test="featureIcon != null">#{featureIcon},</if>
+            <if test="featureDescription != null">#{featureDescription},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteNutritionFeatures" parameterType="WebsiteNutritionFeatures">
+        update website_nutrition_features
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="featureTitle != null and featureTitle != ''">feature_title = #{featureTitle},</if>
+            <if test="featureIcon != null">feature_icon = #{featureIcon},</if>
+            <if test="featureDescription != null">feature_description = #{featureDescription},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where feature_id = #{featureId}
+    </update>
+
+    <delete id="deleteWebsiteNutritionFeaturesByFeatureId" parameterType="Long">
+        delete from website_nutrition_features where feature_id = #{featureId}
+    </delete>
+
+    <delete id="deleteWebsiteNutritionFeaturesByFeatureIds" parameterType="String">
+        delete from website_nutrition_features where feature_id in 
+        <foreach item="featureId" collection="array" open="(" separator="," close=")">
+            #{featureId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+
+
+

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteHealthReportMapper">
+    
+    <resultMap type="WebsiteHealthReport" id="WebsiteHealthReportResult">
+        <result property="reportId"    column="report_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="reportDate"    column="report_date"    />
+        <result property="reportType"    column="report_type"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="nurseName"    column="nurse_name"    />
+        <result property="vitalSigns"    column="vital_signs"    />
+        <result property="bloodPressure"    column="blood_pressure"    />
+        <result property="heartRate"    column="heart_rate"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="weight"    column="weight"    />
+        <result property="height"    column="height"    />
+        <result property="bloodSugar"    column="blood_sugar"    />
+        <result property="bloodOxygen"    column="blood_oxygen"    />
+        <result property="symptoms"    column="symptoms"    />
+        <result property="diagnosis"    column="diagnosis"    />
+        <result property="treatment"    column="treatment"    />
+        <result property="medications"    column="medications"    />
+        <result property="nursingNotes"    column="nursing_notes"    />
+        <result property="recommendations"    column="recommendations"    />
+        <result property="nextCheckDate"    column="next_check_date"    />
+        <result property="attachments"    column="attachments"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteHealthReportVo">
+        select report_id, elderly_id, elderly_name, report_date, report_type, doctor_name, nurse_name, vital_signs, blood_pressure, heart_rate, temperature, weight, height, blood_sugar, blood_oxygen, symptoms, diagnosis, treatment, medications, nursing_notes, recommendations, next_check_date, attachments, status, create_by, create_time, update_by, update_time, remark from website_health_report
+    </sql>
+
+    <select id="selectWebsiteHealthReportList" parameterType="WebsiteHealthReport" resultMap="WebsiteHealthReportResult">
+        <include refid="selectWebsiteHealthReportVo"/>
+        <where>  
+            <if test="elderlyId != null "> and elderly_id = #{elderlyId}</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and elderly_name like concat('%', #{elderlyName}, '%')</if>
+            <if test="reportDate != null "> and report_date = #{reportDate}</if>
+            <if test="reportType != null  and reportType != ''"> and report_type = #{reportType}</if>
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
+            <if test="nurseName != null  and nurseName != ''"> and nurse_name like concat('%', #{nurseName}, '%')</if>
+            <if test="bloodPressure != null  and bloodPressure != ''"> and blood_pressure = #{bloodPressure}</if>
+            <if test="heartRate != null "> and heart_rate = #{heartRate}</if>
+            <if test="temperature != null "> and temperature = #{temperature}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="bloodSugar != null "> and blood_sugar = #{bloodSugar}</if>
+            <if test="bloodOxygen != null "> and blood_oxygen = #{bloodOxygen}</if>
+            <if test="symptoms != null  and symptoms != ''"> and symptoms = #{symptoms}</if>
+            <if test="diagnosis != null  and diagnosis != ''"> and diagnosis = #{diagnosis}</if>
+            <if test="treatment != null  and treatment != ''"> and treatment = #{treatment}</if>
+            <if test="medications != null  and medications != ''"> and medications = #{medications}</if>
+            <if test="nursingNotes != null  and nursingNotes != ''"> and nursing_notes = #{nursingNotes}</if>
+            <if test="recommendations != null  and recommendations != ''"> and recommendations = #{recommendations}</if>
+            <if test="nextCheckDate != null "> and next_check_date = #{nextCheckDate}</if>
+            <if test="attachments != null  and attachments != ''"> and attachments = #{attachments}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by report_date desc
+    </select>
+    
+    <select id="selectWebsiteHealthReportByReportId" parameterType="Long" resultMap="WebsiteHealthReportResult">
+        <include refid="selectWebsiteHealthReportVo"/>
+        where report_id = #{reportId}
+    </select>
+        
+    <insert id="insertWebsiteHealthReport" parameterType="WebsiteHealthReport" useGeneratedKeys="true" keyProperty="reportId">
+        insert into website_health_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name,</if>
+            <if test="reportDate != null">report_date,</if>
+            <if test="reportType != null and reportType != ''">report_type,</if>
+            <if test="doctorName != null">doctor_name,</if>
+            <if test="nurseName != null">nurse_name,</if>
+            <if test="vitalSigns != null">vital_signs,</if>
+            <if test="bloodPressure != null">blood_pressure,</if>
+            <if test="heartRate != null">heart_rate,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="weight != null">weight,</if>
+            <if test="height != null">height,</if>
+            <if test="bloodSugar != null">blood_sugar,</if>
+            <if test="bloodOxygen != null">blood_oxygen,</if>
+            <if test="symptoms != null">symptoms,</if>
+            <if test="diagnosis != null">diagnosis,</if>
+            <if test="treatment != null">treatment,</if>
+            <if test="medications != null">medications,</if>
+            <if test="nursingNotes != null">nursing_notes,</if>
+            <if test="recommendations != null">recommendations,</if>
+            <if test="nextCheckDate != null">next_check_date,</if>
+            <if test="attachments != null">attachments,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">#{elderlyName},</if>
+            <if test="reportDate != null">#{reportDate},</if>
+            <if test="reportType != null and reportType != ''">#{reportType},</if>
+            <if test="doctorName != null">#{doctorName},</if>
+            <if test="nurseName != null">#{nurseName},</if>
+            <if test="vitalSigns != null">#{vitalSigns},</if>
+            <if test="bloodPressure != null">#{bloodPressure},</if>
+            <if test="heartRate != null">#{heartRate},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="height != null">#{height},</if>
+            <if test="bloodSugar != null">#{bloodSugar},</if>
+            <if test="bloodOxygen != null">#{bloodOxygen},</if>
+            <if test="symptoms != null">#{symptoms},</if>
+            <if test="diagnosis != null">#{diagnosis},</if>
+            <if test="treatment != null">#{treatment},</if>
+            <if test="medications != null">#{medications},</if>
+            <if test="nursingNotes != null">#{nursingNotes},</if>
+            <if test="recommendations != null">#{recommendations},</if>
+            <if test="nextCheckDate != null">#{nextCheckDate},</if>
+            <if test="attachments != null">#{attachments},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteHealthReport" parameterType="WebsiteHealthReport">
+        update website_health_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name = #{elderlyName},</if>
+            <if test="reportDate != null">report_date = #{reportDate},</if>
+            <if test="reportType != null and reportType != ''">report_type = #{reportType},</if>
+            <if test="doctorName != null">doctor_name = #{doctorName},</if>
+            <if test="nurseName != null">nurse_name = #{nurseName},</if>
+            <if test="vitalSigns != null">vital_signs = #{vitalSigns},</if>
+            <if test="bloodPressure != null">blood_pressure = #{bloodPressure},</if>
+            <if test="heartRate != null">heart_rate = #{heartRate},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="bloodSugar != null">blood_sugar = #{bloodSugar},</if>
+            <if test="bloodOxygen != null">blood_oxygen = #{bloodOxygen},</if>
+            <if test="symptoms != null">symptoms = #{symptoms},</if>
+            <if test="diagnosis != null">diagnosis = #{diagnosis},</if>
+            <if test="treatment != null">treatment = #{treatment},</if>
+            <if test="medications != null">medications = #{medications},</if>
+            <if test="nursingNotes != null">nursing_notes = #{nursingNotes},</if>
+            <if test="recommendations != null">recommendations = #{recommendations},</if>
+            <if test="nextCheckDate != null">next_check_date = #{nextCheckDate},</if>
+            <if test="attachments != null">attachments = #{attachments},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where report_id = #{reportId}
+    </update>
+
+    <delete id="deleteWebsiteHealthReportByReportId" parameterType="Long">
+        delete from website_health_report where report_id = #{reportId}
+    </delete>
+
+    <delete id="deleteWebsiteHealthReportByReportIds" parameterType="String">
+        delete from website_health_report where report_id in 
+        <foreach item="reportId" collection="array" open="(" separator="," close=")">
+            #{reportId}
+        </foreach>
+    </delete>
+    
+    <select id="getLatestHealthReportByFamilyId" parameterType="Long" resultMap="WebsiteHealthReportResult">
+        SELECT h.report_id, h.elderly_id, h.elderly_name, h.report_date, h.report_type, 
+               h.doctor_name, h.nurse_name, h.vital_signs, h.blood_pressure, h.heart_rate, 
+               h.temperature, h.weight, h.height, h.blood_sugar, h.blood_oxygen, h.symptoms, 
+               h.diagnosis, h.treatment, h.medications, h.nursing_notes, h.recommendations, 
+               h.next_check_date, h.attachments, h.status, h.create_by, h.create_time, 
+               h.update_by, h.update_time, h.remark
+        FROM website_health_report h
+        INNER JOIN website_family_elderly_relation r ON h.elderly_id = r.elderly_id
+        WHERE r.family_id = #{familyId} AND r.bind_status = '1' AND h.status = '0'
+        ORDER BY h.report_date DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectWebsiteHealthReportCount" resultType="int">
+        select count(*) from website_health_report
+    </select>
+</mapper>
+
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteNutritionMenuMapper">
+    
+    <resultMap type="WebsiteNutritionMenu" id="WebsiteNutritionMenuResult">
+        <result property="menuId"    column="menu_id"    />
+        <result property="mealTime"    column="meal_time"    />
+        <result property="mealName"    column="meal_name"    />
+        <result property="menuDishes"    column="menu_dishes"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteNutritionMenuVo">
+        select menu_id, meal_time, meal_name, menu_dishes, sort_order, status, create_by, create_time, update_by, update_time, remark from website_nutrition_menu
+    </sql>
+
+    <select id="selectWebsiteNutritionMenuList" parameterType="WebsiteNutritionMenu" resultMap="WebsiteNutritionMenuResult">
+        <include refid="selectWebsiteNutritionMenuVo"/>
+        <where>  
+            <if test="mealTime != null  and mealTime != ''"> and meal_time like concat('%', #{mealTime}, '%')</if>
+            <if test="mealName != null  and mealName != ''"> and meal_name like concat('%', #{mealName}, '%')</if>
+            <if test="menuDishes != null  and menuDishes != ''"> and menu_dishes = #{menuDishes}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by sort_order
+    </select>
+    
+    <select id="selectWebsiteNutritionMenuByMenuId" parameterType="Long" resultMap="WebsiteNutritionMenuResult">
+        <include refid="selectWebsiteNutritionMenuVo"/>
+        where menu_id = #{menuId}
+    </select>
+        
+    <insert id="insertWebsiteNutritionMenu" parameterType="WebsiteNutritionMenu" useGeneratedKeys="true" keyProperty="menuId">
+        insert into website_nutrition_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mealTime != null and mealTime != ''">meal_time,</if>
+            <if test="mealName != null and mealName != ''">meal_name,</if>
+            <if test="menuDishes != null">menu_dishes,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mealTime != null and mealTime != ''">#{mealTime},</if>
+            <if test="mealName != null and mealName != ''">#{mealName},</if>
+            <if test="menuDishes != null">#{menuDishes},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteNutritionMenu" parameterType="WebsiteNutritionMenu">
+        update website_nutrition_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mealTime != null and mealTime != ''">meal_time = #{mealTime},</if>
+            <if test="mealName != null and mealName != ''">meal_name = #{mealName},</if>
+            <if test="menuDishes != null">menu_dishes = #{menuDishes},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteWebsiteNutritionMenuByMenuId" parameterType="Long">
+        delete from website_nutrition_menu where menu_id = #{menuId}
+    </delete>
+
+    <delete id="deleteWebsiteNutritionMenuByMenuIds" parameterType="String">
+        delete from website_nutrition_menu where menu_id in 
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+

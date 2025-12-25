@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteEntertainmentServicesMapper">
+    
+    <resultMap type="WebsiteEntertainmentServices" id="WebsiteEntertainmentServicesResult">
+        <result property="activityId"    column="activity_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="categoryIcon"    column="category_icon"    />
+        <result property="activityName"    column="activity_name"    />
+        <result property="activityDescription"    column="activity_description"    />
+        <result property="activityTime"    column="activity_time"    />
+        <result property="activityLocation"    column="activity_location"    />
+        <result property="activityImage"    column="activity_image"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteEntertainmentServicesVo">
+        select activity_id, category_id, category_name, category_icon, activity_name, activity_description, activity_time, activity_location, activity_image, sort_order, status, create_by, create_time, update_by, update_time, remark from website_entertainment_services
+    </sql>
+
+    <select id="selectWebsiteEntertainmentServicesList" parameterType="WebsiteEntertainmentServices" resultMap="WebsiteEntertainmentServicesResult">
+        <include refid="selectWebsiteEntertainmentServicesVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="categoryIcon != null  and categoryIcon != ''"> and category_icon = #{categoryIcon}</if>
+            <if test="activityName != null  and activityName != ''"> and activity_name like concat('%', #{activityName}, '%')</if>
+            <if test="activityDescription != null  and activityDescription != ''"> and activity_description = #{activityDescription}</if>
+            <if test="activityTime != null  and activityTime != ''"> and activity_time = #{activityTime}</if>
+            <if test="activityLocation != null  and activityLocation != ''"> and activity_location = #{activityLocation}</if>
+            <if test="activityImage != null  and activityImage != ''"> and activity_image = #{activityImage}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by category_id, sort_order
+    </select>
+    
+    <select id="selectWebsiteEntertainmentServicesByActivityId" parameterType="Long" resultMap="WebsiteEntertainmentServicesResult">
+        <include refid="selectWebsiteEntertainmentServicesVo"/>
+        where activity_id = #{activityId}
+    </select>
+        
+    <insert id="insertWebsiteEntertainmentServices" parameterType="WebsiteEntertainmentServices" useGeneratedKeys="true" keyProperty="activityId">
+        insert into website_entertainment_services
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="categoryName != null and categoryName != ''">category_name,</if>
+            <if test="categoryIcon != null">category_icon,</if>
+            <if test="activityName != null and activityName != ''">activity_name,</if>
+            <if test="activityDescription != null">activity_description,</if>
+            <if test="activityTime != null">activity_time,</if>
+            <if test="activityLocation != null">activity_location,</if>
+            <if test="activityImage != null">activity_image,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="categoryName != null and categoryName != ''">#{categoryName},</if>
+            <if test="categoryIcon != null">#{categoryIcon},</if>
+            <if test="activityName != null and activityName != ''">#{activityName},</if>
+            <if test="activityDescription != null">#{activityDescription},</if>
+            <if test="activityTime != null">#{activityTime},</if>
+            <if test="activityLocation != null">#{activityLocation},</if>
+            <if test="activityImage != null">#{activityImage},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteEntertainmentServices" parameterType="WebsiteEntertainmentServices">
+        update website_entertainment_services
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="categoryName != null and categoryName != ''">category_name = #{categoryName},</if>
+            <if test="categoryIcon != null">category_icon = #{categoryIcon},</if>
+            <if test="activityName != null and activityName != ''">activity_name = #{activityName},</if>
+            <if test="activityDescription != null">activity_description = #{activityDescription},</if>
+            <if test="activityTime != null">activity_time = #{activityTime},</if>
+            <if test="activityLocation != null">activity_location = #{activityLocation},</if>
+            <if test="activityImage != null">activity_image = #{activityImage},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where activity_id = #{activityId}
+    </update>
+
+    <delete id="deleteWebsiteEntertainmentServicesByActivityId" parameterType="Long">
+        delete from website_entertainment_services where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteWebsiteEntertainmentServicesByActivityIds" parameterType="String">
+        delete from website_entertainment_services where activity_id in 
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+
+
+

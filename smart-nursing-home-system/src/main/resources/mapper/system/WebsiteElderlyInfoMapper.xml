@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteElderlyInfoMapper">
+
+    <resultMap type="WebsiteElderlyInfo" id="WebsiteElderlyInfoResult">
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="gender"    column="gender"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="phone"    column="phone"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="admissionDate"    column="admission_date"    />
+        <result property="healthStatus"    column="health_status"    />
+        <result property="careLevel"    column="care_level"    />
+        <result property="emergencyContact"    column="emergency_contact"    />
+        <result property="emergencyPhone"    column="emergency_phone"    />
+        <result property="medicalHistory"    column="medical_history"    />
+        <result property="allergies"    column="allergies"    />
+        <result property="medications"    column="medications"    />
+        <result property="specialNotes"    column="special_notes"    />
+        <result property="photoUrl"    column="photo_url"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteElderlyInfoVo">
+        select elderly_id, elderly_name, gender, birth_date, id_card, phone, room_number, bed_number, admission_date, health_status, care_level, emergency_contact, emergency_phone, medical_history, allergies, medications, special_notes, photo_url, status, create_by, create_time, update_by, update_time, remark from website_elderly_info
+    </sql>
+
+    <select id="selectWebsiteElderlyInfoList" parameterType="WebsiteElderlyInfo" resultMap="WebsiteElderlyInfoResult">
+        <include refid="selectWebsiteElderlyInfoVo"/>
+        <where>
+            <if test="elderlyName != null  and elderlyName != ''"> and (elderly_name like concat('%', #{elderlyName}, '%') or id_card like concat('%', #{elderlyName}, '%'))</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="birthDate != null "> and birth_date = #{birthDate}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card like concat('%', #{idCard}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="roomNumber != null  and roomNumber != ''"> and room_number like concat('%', #{roomNumber}, '%')</if>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number like concat('%', #{bedNumber}, '%')</if>
+            <if test="admissionDate != null "> and admission_date = #{admissionDate}</if>
+            <if test="healthStatus != null  and healthStatus != ''"> and health_status = #{healthStatus}</if>
+            <if test="careLevel != null  and careLevel != ''"> and care_level = #{careLevel}</if>
+            <if test="emergencyContact != null  and emergencyContact != ''"> and emergency_contact like concat('%', #{emergencyContact}, '%')</if>
+            <if test="emergencyPhone != null  and emergencyPhone != ''"> and emergency_phone like concat('%', #{emergencyPhone}, '%')</if>
+            <if test="medicalHistory != null  and medicalHistory != ''"> and medical_history like concat('%', #{medicalHistory}, '%')</if>
+            <if test="allergies != null  and allergies != ''"> and allergies like concat('%', #{allergies}, '%')</if>
+            <if test="medications != null  and medications != ''"> and medications like concat('%', #{medications}, '%')</if>
+            <if test="specialNotes != null  and specialNotes != ''"> and special_notes like concat('%', #{specialNotes}, '%')</if>
+            <if test="photoUrl != null  and photoUrl != ''"> and photo_url = #{photoUrl}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectWebsiteElderlyInfoByElderlyId" parameterType="Long" resultMap="WebsiteElderlyInfoResult">
+        <include refid="selectWebsiteElderlyInfoVo"/>
+        where elderly_id = #{elderlyId}
+    </select>
+
+    <insert id="insertWebsiteElderlyInfo" parameterType="WebsiteElderlyInfo" useGeneratedKeys="true" keyProperty="elderlyId">
+        insert into website_elderly_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderlyName != null and elderlyName != ''">elderly_name,</if>
+            <if test="gender != null and gender != ''">gender,</if>
+            <if test="birthDate != null">birth_date,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="phone != null">phone,</if>
+            <if test="roomNumber != null">room_number,</if>
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="admissionDate != null">admission_date,</if>
+            <if test="healthStatus != null">health_status,</if>
+            <if test="careLevel != null">care_level,</if>
+            <if test="emergencyContact != null">emergency_contact,</if>
+            <if test="emergencyPhone != null">emergency_phone,</if>
+            <if test="medicalHistory != null">medical_history,</if>
+            <if test="allergies != null">allergies,</if>
+            <if test="medications != null">medications,</if>
+            <if test="specialNotes != null">special_notes,</if>
+            <if test="photoUrl != null">photo_url,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderlyName != null and elderlyName != ''">#{elderlyName},</if>
+            <if test="gender != null and gender != ''">#{gender},</if>
+            <if test="birthDate != null">#{birthDate},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="roomNumber != null">#{roomNumber},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="admissionDate != null">#{admissionDate},</if>
+            <if test="healthStatus != null">#{healthStatus},</if>
+            <if test="careLevel != null">#{careLevel},</if>
+            <if test="emergencyContact != null">#{emergencyContact},</if>
+            <if test="emergencyPhone != null">#{emergencyPhone},</if>
+            <if test="medicalHistory != null">#{medicalHistory},</if>
+            <if test="allergies != null">#{allergies},</if>
+            <if test="medications != null">#{medications},</if>
+            <if test="specialNotes != null">#{specialNotes},</if>
+            <if test="photoUrl != null">#{photoUrl},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteElderlyInfo" parameterType="WebsiteElderlyInfo">
+        update website_elderly_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderlyName != null and elderlyName != ''">elderly_name = #{elderlyName},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="roomNumber != null">room_number = #{roomNumber},</if>
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="admissionDate != null">admission_date = #{admissionDate},</if>
+            <if test="healthStatus != null">health_status = #{healthStatus},</if>
+            <if test="careLevel != null">care_level = #{careLevel},</if>
+            <if test="emergencyContact != null">emergency_contact = #{emergencyContact},</if>
+            <if test="emergencyPhone != null">emergency_phone = #{emergencyPhone},</if>
+            <if test="medicalHistory != null">medical_history = #{medicalHistory},</if>
+            <if test="allergies != null">allergies = #{allergies},</if>
+            <if test="medications != null">medications = #{medications},</if>
+            <if test="specialNotes != null">special_notes = #{specialNotes},</if>
+            <if test="photoUrl != null">photo_url = #{photoUrl},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where elderly_id = #{elderlyId}
+    </update>
+
+    <delete id="deleteWebsiteElderlyInfoByElderlyId" parameterType="Long">
+        delete from website_elderly_info where elderly_id = #{elderlyId}
+    </delete>
+
+    <delete id="deleteWebsiteElderlyInfoByElderlyIds" parameterType="String">
+        delete from website_elderly_info where elderly_id in
+        <foreach item="elderlyId" collection="array" open="(" separator="," close=")">
+            #{elderlyId}
+        </foreach>
+    </delete>
+
+    <select id="selectWebsiteElderlyInfoCount" resultType="int">
+        select count(*) from website_elderly_info
+    </select>
+</mapper>
+
+
+
+

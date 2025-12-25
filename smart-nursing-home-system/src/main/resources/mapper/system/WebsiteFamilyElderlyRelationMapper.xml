@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFamilyElderlyRelationMapper">
+    
+    <resultMap type="WebsiteFamilyElderlyRelation" id="WebsiteFamilyElderlyRelationResult">
+        <result property="relationId"    column="relation_id"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="relationship"    column="relationship"    />
+        <result property="isPrimary"    column="is_primary"    />
+        <result property="bindStatus"    column="bind_status"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="verifyCode"    column="verify_code"    />
+        <result property="verifyExpireTime"    column="verify_expire_time"    />
+        <result property="familyName"    column="family_name"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="familyPhone"    column="family_phone"    />
+        <result property="elderlyRoomNumber"    column="elderly_room_number"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="admissionDate"    column="admission_date"    />
+        <result property="careLevel"    column="care_level"    />
+        <result property="healthStatus"    column="health_status"    />
+        <result property="gender"    column="gender"    />
+        <result property="elderlyPhone"    column="elderly_phone"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="emergencyContact"    column="emergency_contact"    />
+        <result property="emergencyPhone"    column="emergency_phone"    />
+        <result property="medicalHistory"    column="medical_history"    />
+        <result property="allergies"    column="allergies"    />
+        <result property="medications"    column="medications"    />
+        <result property="specialNotes"    column="special_notes"    />
+        <result property="photoUrl"    column="photo_url"    />
+        <result property="elderlyStatus"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFamilyElderlyRelationVo">
+        select r.relation_id, r.family_id, r.elderly_id, r.relationship, r.is_primary, r.bind_status, r.bind_time, r.verify_code, r.verify_expire_time, r.create_by, r.create_time, r.update_by, r.update_time, r.remark,
+               f.family_name, f.phone as family_phone,
+               e.elderly_name, e.room_number as elderly_room_number, e.birth_date, e.admission_date, e.care_level, e.health_status, e.gender, e.phone as elderly_phone, e.bed_number, e.emergency_contact, e.emergency_phone, e.medical_history, e.allergies, e.medications, e.special_notes, e.photo_url, e.status
+        from website_family_elderly_relation r
+        left join website_family_user f on r.family_id = f.family_id
+        left join website_elderly_info e on r.elderly_id = e.elderly_id
+    </sql>
+
+    <select id="selectWebsiteFamilyElderlyRelationList" parameterType="WebsiteFamilyElderlyRelation" resultMap="WebsiteFamilyElderlyRelationResult">
+        <include refid="selectWebsiteFamilyElderlyRelationVo"/>
+        <where>  
+            <if test="familyId != null "> and r.family_id = #{familyId}</if>
+            <if test="elderlyId != null "> and r.elderly_id = #{elderlyId}</if>
+            <if test="relationship != null  and relationship != ''"> and r.relationship = #{relationship}</if>
+            <if test="isPrimary != null  and isPrimary != ''"> and r.is_primary = #{isPrimary}</if>
+            <if test="bindStatus != null  and bindStatus != ''"> and r.bind_status = #{bindStatus}</if>
+            <if test="familyName != null  and familyName != ''"> and f.family_name like concat('%', #{familyName}, '%')</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and e.elderly_name like concat('%', #{elderlyName}, '%')</if>
+        </where>
+        order by r.create_time desc
+    </select>
+    
+    <select id="selectWebsiteFamilyElderlyRelationByRelationId" parameterType="Long" resultMap="WebsiteFamilyElderlyRelationResult">
+        <include refid="selectWebsiteFamilyElderlyRelationVo"/>
+        where r.relation_id = #{relationId}
+    </select>
+
+    <select id="selectElderlyListByFamilyId" parameterType="Long" resultMap="WebsiteFamilyElderlyRelationResult">
+        <include refid="selectWebsiteFamilyElderlyRelationVo"/>
+        where r.family_id = #{familyId}
+        order by r.is_primary desc, r.create_time desc
+    </select>
+
+    <select id="selectFamilyListByElderlyId" parameterType="Long" resultMap="WebsiteFamilyElderlyRelationResult">
+        <include refid="selectWebsiteFamilyElderlyRelationVo"/>
+        where r.elderly_id = #{elderlyId}
+        order by r.is_primary desc, r.create_time desc
+    </select>
+
+    <select id="selectElderlyByIdCard" parameterType="String" resultMap="WebsiteFamilyElderlyRelationResult">
+        select e.elderly_id, e.elderly_name, e.room_number as elderly_room_number
+        from website_elderly_info e
+        where e.id_card = #{idCard}
+        limit 1
+    </select>
+        
+    <insert id="insertWebsiteFamilyElderlyRelation" parameterType="WebsiteFamilyElderlyRelation" useGeneratedKeys="true" keyProperty="relationId">
+        insert into website_family_elderly_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">family_id,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="relationship != null and relationship != ''">relationship,</if>
+            <if test="isPrimary != null">is_primary,</if>
+            <if test="bindStatus != null">bind_status,</if>
+            <if test="bindTime != null">bind_time,</if>
+            <if test="verifyCode != null">verify_code,</if>
+            <if test="verifyExpireTime != null">verify_expire_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">#{familyId},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="relationship != null and relationship != ''">#{relationship},</if>
+            <if test="isPrimary != null">#{isPrimary},</if>
+            <if test="bindStatus != null">#{bindStatus},</if>
+            <if test="bindTime != null">#{bindTime},</if>
+            <if test="verifyCode != null">#{verifyCode},</if>
+            <if test="verifyExpireTime != null">#{verifyExpireTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFamilyElderlyRelation" parameterType="WebsiteFamilyElderlyRelation">
+        update website_family_elderly_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="relationship != null and relationship != ''">relationship = #{relationship},</if>
+            <if test="isPrimary != null">is_primary = #{isPrimary},</if>
+            <if test="bindStatus != null">bind_status = #{bindStatus},</if>
+            <if test="bindTime != null">bind_time = #{bindTime},</if>
+            <if test="verifyCode != null">verify_code = #{verifyCode},</if>
+            <if test="verifyExpireTime != null">verify_expire_time = #{verifyExpireTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where relation_id = #{relationId}
+    </update>
+
+    <delete id="deleteWebsiteFamilyElderlyRelationByRelationId" parameterType="Long">
+        delete from website_family_elderly_relation where relation_id = #{relationId}
+    </delete>
+
+    <delete id="deleteWebsiteFamilyElderlyRelationByRelationIds" parameterType="String">
+        delete from website_family_elderly_relation where relation_id in 
+        <foreach item="relationId" collection="array" open="(" separator="," close=")">
+            #{relationId}
+        </foreach>
+    </delete>
+</mapper>

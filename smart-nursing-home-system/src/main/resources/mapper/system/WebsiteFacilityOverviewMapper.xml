@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFacilityOverviewMapper">
+    
+    <resultMap type="WebsiteFacilityOverview" id="WebsiteFacilityOverviewResult">
+        <result property="overviewId"    column="overview_id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="statsData"    column="stats_data"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFacilityOverviewVo">
+        select overview_id, title, description, image_url, stats_data, status, create_by, create_time, update_by, update_time, remark from website_facility_overview
+    </sql>
+
+    <select id="selectWebsiteFacilityOverviewList" parameterType="WebsiteFacilityOverview" resultMap="WebsiteFacilityOverviewResult">
+        <include refid="selectWebsiteFacilityOverviewVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by overview_id asc
+    </select>
+    
+    <select id="selectWebsiteFacilityOverviewByOverviewId" parameterType="Long" resultMap="WebsiteFacilityOverviewResult">
+        <include refid="selectWebsiteFacilityOverviewVo"/>
+        where overview_id = #{overviewId}
+    </select>
+        
+    <insert id="insertWebsiteFacilityOverview" parameterType="WebsiteFacilityOverview" useGeneratedKeys="true" keyProperty="overviewId">
+        insert into website_facility_overview
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="imageUrl != null">image_url,</if>
+            <if test="statsData != null">stats_data,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="imageUrl != null">#{imageUrl},</if>
+            <if test="statsData != null">#{statsData},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFacilityOverview" parameterType="WebsiteFacilityOverview">
+        update website_facility_overview
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            <if test="statsData != null">stats_data = #{statsData},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where overview_id = #{overviewId}
+    </update>
+
+    <delete id="deleteWebsiteFacilityOverviewByOverviewId" parameterType="Long">
+        delete from website_facility_overview where overview_id = #{overviewId}
+    </delete>
+
+    <delete id="deleteWebsiteFacilityOverviewByOverviewIds" parameterType="String">
+        delete from website_facility_overview where overview_id in 
+        <foreach item="overviewId" collection="array" open="(" separator="," close=")">
+            #{overviewId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

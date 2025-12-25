@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteActivityMapper">
+    
+    <resultMap type="WebsiteActivity" id="WebsiteActivityResult">
+        <result property="activityId"    column="activity_id"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="activityType"    column="activity_type"    />
+        <result property="activityTitle"    column="activity_title"    />
+        <result property="activityContent"    column="activity_content"    />
+        <result property="activityTime"    column="activity_time"    />
+        <result property="relatedId"    column="related_id"    />
+        <result property="relatedType"    column="related_type"    />
+        <result property="isRead"    column="is_read"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteActivityVo">
+        select activity_id, family_id, elderly_id, elderly_name, activity_type, activity_title, activity_content, activity_time, related_id, related_type, is_read, status, create_by, create_time, update_by, update_time, remark from website_activity
+    </sql>
+
+    <select id="selectWebsiteActivityList" parameterType="WebsiteActivity" resultMap="WebsiteActivityResult">
+        <include refid="selectWebsiteActivityVo"/>
+        <where>  
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="elderlyId != null "> and elderly_id = #{elderlyId}</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and elderly_name like concat('%', #{elderlyName}, '%')</if>
+            <if test="activityType != null  and activityType != ''"> and activity_type = #{activityType}</if>
+            <if test="activityTitle != null  and activityTitle != ''"> and activity_title like concat('%', #{activityTitle}, '%')</if>
+            <if test="activityContent != null  and activityContent != ''"> and activity_content like concat('%', #{activityContent}, '%')</if>
+            <if test="activityTime != null "> and activity_time = #{activityTime}</if>
+            <if test="relatedId != null "> and related_id = #{relatedId}</if>
+            <if test="relatedType != null  and relatedType != ''"> and related_type = #{relatedType}</if>
+            <if test="isRead != null  and isRead != ''"> and is_read = #{isRead}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by activity_time desc
+    </select>
+    
+    <select id="selectWebsiteActivityByActivityId" parameterType="Long" resultMap="WebsiteActivityResult">
+        <include refid="selectWebsiteActivityVo"/>
+        where activity_id = #{activityId}
+    </select>
+
+    <select id="selectFamilyRecentActivities" parameterType="Long" resultMap="WebsiteActivityResult">
+        <include refid="selectWebsiteActivityVo"/>
+        where family_id = #{familyId} and status = '0'
+        order by activity_time desc
+        limit 10
+    </select>
+        
+    <insert id="insertWebsiteActivity" parameterType="WebsiteActivity" useGeneratedKeys="true" keyProperty="activityId">
+        insert into website_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">family_id,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name,</if>
+            <if test="activityType != null and activityType != ''">activity_type,</if>
+            <if test="activityTitle != null and activityTitle != ''">activity_title,</if>
+            <if test="activityContent != null and activityContent != ''">activity_content,</if>
+            <if test="activityTime != null">activity_time,</if>
+            <if test="relatedId != null">related_id,</if>
+            <if test="relatedType != null and relatedType != ''">related_type,</if>
+            <if test="isRead != null">is_read,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">#{familyId},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">#{elderlyName},</if>
+            <if test="activityType != null and activityType != ''">#{activityType},</if>
+            <if test="activityTitle != null and activityTitle != ''">#{activityTitle},</if>
+            <if test="activityContent != null and activityContent != ''">#{activityContent},</if>
+            <if test="activityTime != null">#{activityTime},</if>
+            <if test="relatedId != null">#{relatedId},</if>
+            <if test="relatedType != null and relatedType != ''">#{relatedType},</if>
+            <if test="isRead != null">#{isRead},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteActivity" parameterType="WebsiteActivity">
+        update website_activity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name = #{elderlyName},</if>
+            <if test="activityType != null and activityType != ''">activity_type = #{activityType},</if>
+            <if test="activityTitle != null and activityTitle != ''">activity_title = #{activityTitle},</if>
+            <if test="activityContent != null and activityContent != ''">activity_content = #{activityContent},</if>
+            <if test="activityTime != null">activity_time = #{activityTime},</if>
+            <if test="relatedId != null">related_id = #{relatedId},</if>
+            <if test="relatedType != null and relatedType != ''">related_type = #{relatedType},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where activity_id = #{activityId}
+    </update>
+
+    <delete id="deleteWebsiteActivityByActivityId" parameterType="Long">
+        delete from website_activity where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteWebsiteActivityByActivityIds" parameterType="String">
+        delete from website_activity where activity_id in 
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+
+    <update id="markActivityAsRead" parameterType="Long">
+        update website_activity set is_read = '1', update_time = NOW() where activity_id = #{activityId}
+    </update>
+</mapper>

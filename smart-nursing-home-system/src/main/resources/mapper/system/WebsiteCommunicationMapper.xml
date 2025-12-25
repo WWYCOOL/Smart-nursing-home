@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteCommunicationMapper">
+    
+    <resultMap type="WebsiteCommunication" id="WebsiteCommunicationResult">
+        <result property="messageId"    column="message_id"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="familyName"    column="family_name"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="senderType"    column="sender_type"    />
+        <result property="senderName"    column="sender_name"    />
+        <result property="content"    column="content"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="isRead"    column="is_read"    />
+        <result property="messageType"    column="message_type"    />
+        <result property="attachmentPath"    column="attachment_path"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteCommunicationVo">
+        select message_id, family_id, elderly_id, family_name, elderly_name, sender_type, sender_name, content, send_time, is_read, message_type, attachment_path, status, create_by, create_time, update_by, update_time, remark from website_communication
+    </sql>
+
+    <select id="selectWebsiteCommunicationList" parameterType="WebsiteCommunication" resultMap="WebsiteCommunicationResult">
+        <include refid="selectWebsiteCommunicationVo"/>
+        <where>  
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="elderlyId != null "> and elderly_id = #{elderlyId}</if>
+            <if test="familyName != null  and familyName != ''"> and family_name like concat('%', #{familyName}, '%')</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and elderly_name like concat('%', #{elderlyName}, '%')</if>
+            <if test="senderType != null  and senderType != ''"> and sender_type = #{senderType}</if>
+            <if test="senderName != null  and senderName != ''"> and sender_name like concat('%', #{senderName}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="sendTime != null "> and send_time = #{sendTime}</if>
+            <if test="isRead != null  and isRead != ''"> and is_read = #{isRead}</if>
+            <if test="messageType != null  and messageType != ''"> and message_type = #{messageType}</if>
+            <if test="attachmentPath != null  and attachmentPath != ''"> and attachment_path = #{attachmentPath}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by send_time asc
+    </select>
+    
+    <select id="selectWebsiteCommunicationByMessageId" parameterType="Long" resultMap="WebsiteCommunicationResult">
+        <include refid="selectWebsiteCommunicationVo"/>
+        where message_id = #{messageId}
+    </select>
+
+    <select id="selectUnreadCountByFamilyId" parameterType="Long" resultType="int">
+        select count(*) from website_communication 
+        where family_id = #{familyId} 
+        and sender_type = 'staff' 
+        and is_read = '0' 
+        and status = '0'
+    </select>
+        
+    <insert id="insertWebsiteCommunication" parameterType="WebsiteCommunication" useGeneratedKeys="true" keyProperty="messageId">
+        insert into website_communication
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">family_id,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="familyName != null and familyName != ''">family_name,</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name,</if>
+            <if test="senderType != null and senderType != ''">sender_type,</if>
+            <if test="senderName != null and senderName != ''">sender_name,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="isRead != null and isRead != ''">is_read,</if>
+            <if test="messageType != null and messageType != ''">message_type,</if>
+            <if test="attachmentPath != null">attachment_path,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">#{familyId},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="familyName != null and familyName != ''">#{familyName},</if>
+            <if test="elderlyName != null and elderlyName != ''">#{elderlyName},</if>
+            <if test="senderType != null and senderType != ''">#{senderType},</if>
+            <if test="senderName != null and senderName != ''">#{senderName},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="isRead != null and isRead != ''">#{isRead},</if>
+            <if test="messageType != null and messageType != ''">#{messageType},</if>
+            <if test="attachmentPath != null">#{attachmentPath},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteCommunication" parameterType="WebsiteCommunication">
+        update website_communication
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="familyName != null and familyName != ''">family_name = #{familyName},</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name = #{elderlyName},</if>
+            <if test="senderType != null and senderType != ''">sender_type = #{senderType},</if>
+            <if test="senderName != null and senderName != ''">sender_name = #{senderName},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="isRead != null and isRead != ''">is_read = #{isRead},</if>
+            <if test="messageType != null and messageType != ''">message_type = #{messageType},</if>
+            <if test="attachmentPath != null">attachment_path = #{attachmentPath},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where message_id = #{messageId}
+    </update>
+
+    <delete id="deleteWebsiteCommunicationByMessageId" parameterType="Long">
+        delete from website_communication where message_id = #{messageId}
+    </delete>
+
+    <delete id="deleteWebsiteCommunicationByMessageIds" parameterType="String">
+        delete from website_communication where message_id in 
+        <foreach item="messageId" collection="array" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </delete>
+</mapper>

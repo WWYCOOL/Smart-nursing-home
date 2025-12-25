@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteAppointmentMapper">
+    
+    <resultMap type="WebsiteAppointment" id="WebsiteAppointmentResult">
+        <result property="appointmentId"    column="appointment_id"    />
+        <result property="name"    column="name"    />
+        <result property="gender"    column="gender"    />
+        <result property="phone"    column="phone"    />
+        <result property="age"    column="age"    />
+        <result property="appointmentTime"    column="appointment_time"    />
+        <result property="visitorCount"    column="visitor_count"    />
+        <result property="relationship"    column="relationship"    />
+        <result property="healthStatus"    column="health_status"    />
+        <result property="specialNeeds"    column="special_needs"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="confirmTime"    column="confirm_time"    />
+        <result property="confirmUser"    column="confirm_user"    />
+        <result property="cancelReason"    column="cancel_reason"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWebsiteAppointmentVo">
+        select appointment_id, name, gender, phone, age, appointment_time, visitor_count, relationship, health_status, special_needs, remark, status, confirm_time, confirm_user, cancel_reason, create_time, update_time from website_appointment
+    </sql>
+
+    <select id="selectWebsiteAppointmentList" parameterType="WebsiteAppointment" resultMap="WebsiteAppointmentResult">
+        <include refid="selectWebsiteAppointmentVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="appointmentTime != null "> and appointment_time = #{appointmentTime}</if>
+            <if test="visitorCount != null "> and visitor_count = #{visitorCount}</if>
+            <if test="relationship != null  and relationship != ''"> and relationship = #{relationship}</if>
+            <if test="healthStatus != null  and healthStatus != ''"> and health_status = #{healthStatus}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="confirmUser != null  and confirmUser != ''"> and confirm_user like concat('%', #{confirmUser}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.beginAppointmentTime != null and params.beginAppointmentTime != ''"><!-- 预约开始时间检索 -->
+                and date_format(appointment_time,'%y%m%d') &gt;= date_format(#{params.beginAppointmentTime},'%y%m%d')
+            </if>
+            <if test="params.endAppointmentTime != null and params.endAppointmentTime != ''"><!-- 预约结束时间检索 -->
+                and date_format(appointment_time,'%y%m%d') &lt;= date_format(#{params.endAppointmentTime},'%y%m%d')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectWebsiteAppointmentByAppointmentId" parameterType="Long" resultMap="WebsiteAppointmentResult">
+        <include refid="selectWebsiteAppointmentVo"/>
+        where appointment_id = #{appointmentId}
+    </select>
+        
+    <insert id="insertWebsiteAppointment" parameterType="WebsiteAppointment" useGeneratedKeys="true" keyProperty="appointmentId">
+        insert into website_appointment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="gender != null and gender != ''">gender,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="age != null">age,</if>
+            <if test="appointmentTime != null">appointment_time,</if>
+            <if test="visitorCount != null">visitor_count,</if>
+            <if test="relationship != null and relationship != ''">relationship,</if>
+            <if test="healthStatus != null and healthStatus != ''">health_status,</if>
+            <if test="specialNeeds != null">special_needs,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="confirmTime != null">confirm_time,</if>
+            <if test="confirmUser != null">confirm_user,</if>
+            <if test="cancelReason != null">cancel_reason,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="gender != null and gender != ''">#{gender},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="age != null">#{age},</if>
+            <if test="appointmentTime != null">#{appointmentTime},</if>
+            <if test="visitorCount != null">#{visitorCount},</if>
+            <if test="relationship != null and relationship != ''">#{relationship},</if>
+            <if test="healthStatus != null and healthStatus != ''">#{healthStatus},</if>
+            <if test="specialNeeds != null">#{specialNeeds},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="confirmTime != null">#{confirmTime},</if>
+            <if test="confirmUser != null">#{confirmUser},</if>
+            <if test="cancelReason != null">#{cancelReason},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteAppointment" parameterType="WebsiteAppointment">
+        update website_appointment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="appointmentTime != null">appointment_time = #{appointmentTime},</if>
+            <if test="visitorCount != null">visitor_count = #{visitorCount},</if>
+            <if test="relationship != null and relationship != ''">relationship = #{relationship},</if>
+            <if test="healthStatus != null and healthStatus != ''">health_status = #{healthStatus},</if>
+            <if test="specialNeeds != null">special_needs = #{specialNeeds},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="confirmTime != null">confirm_time = #{confirmTime},</if>
+            <if test="confirmUser != null">confirm_user = #{confirmUser},</if>
+            <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
+            update_time = sysdate()
+        </trim>
+        where appointment_id = #{appointmentId}
+    </update>
+
+    <delete id="deleteWebsiteAppointmentByAppointmentId" parameterType="Long">
+        delete from website_appointment where appointment_id = #{appointmentId}
+    </delete>
+
+    <delete id="deleteWebsiteAppointmentByAppointmentIds" parameterType="String">
+        delete from website_appointment where appointment_id in 
+        <foreach item="appointmentId" collection="array" open="(" separator="," close=")">
+            #{appointmentId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFeeQueryMapper">
+    
+    <resultMap type="WebsiteFeeQuery" id="WebsiteFeeQueryResult">
+        <result property="queryId"    column="query_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="queryType"    column="query_type"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="queryStatus"    column="query_status"    />
+        <result property="queryResult"    column="query_result"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="paidAmount"    column="paid_amount"    />
+        <result property="unpaidAmount"    column="unpaid_amount"    />
+        <result property="queryBy"    column="query_by"    />
+        <result property="queryTime"    column="query_time"    />
+        <result property="processBy"    column="process_by"    />
+        <result property="processTime"    column="process_time"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFeeQueryVo">
+        select query_id, elderly_id, elderly_name, query_type, start_date, end_date, query_status, query_result, total_amount, paid_amount, unpaid_amount, query_by, query_time, process_by, process_time, send_time, remark, create_by, create_time, update_by, update_time from website_fee_query
+    </sql>
+
+    <select id="selectWebsiteFeeQueryList" parameterType="WebsiteFeeQuery" resultMap="WebsiteFeeQueryResult">
+        <include refid="selectWebsiteFeeQueryVo"/>
+        <where>  
+            <if test="elderlyId != null "> and elderly_id = #{elderlyId}</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and elderly_name like concat('%', #{elderlyName}, '%')</if>
+            <if test="queryType != null  and queryType != ''"> and query_type = #{queryType}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="queryStatus != null  and queryStatus != ''"> and query_status = #{queryStatus}</if>
+            <if test="queryBy != null  and queryBy != ''"> and query_by like concat('%', #{queryBy}, '%')</if>
+            <if test="processBy != null  and processBy != ''"> and process_by like concat('%', #{processBy}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(query_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(query_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by query_time desc
+    </select>
+    
+    <select id="selectWebsiteFeeQueryByQueryId" parameterType="Long" resultMap="WebsiteFeeQueryResult">
+        <include refid="selectWebsiteFeeQueryVo"/>
+        where query_id = #{queryId}
+    </select>
+        
+    <insert id="insertWebsiteFeeQuery" parameterType="WebsiteFeeQuery" useGeneratedKeys="true" keyProperty="queryId">
+        insert into website_fee_query
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name,</if>
+            <if test="queryType != null and queryType != ''">query_type,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="queryStatus != null">query_status,</if>
+            <if test="queryResult != null">query_result,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="paidAmount != null">paid_amount,</if>
+            <if test="unpaidAmount != null">unpaid_amount,</if>
+            <if test="queryBy != null">query_by,</if>
+            <if test="queryTime != null">query_time,</if>
+            <if test="processBy != null">process_by,</if>
+            <if test="processTime != null">process_time,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">#{elderlyName},</if>
+            <if test="queryType != null and queryType != ''">#{queryType},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="queryStatus != null">#{queryStatus},</if>
+            <if test="queryResult != null">#{queryResult},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="paidAmount != null">#{paidAmount},</if>
+            <if test="unpaidAmount != null">#{unpaidAmount},</if>
+            <if test="queryBy != null">#{queryBy},</if>
+            <if test="queryTime != null">#{queryTime},</if>
+            <if test="processBy != null">#{processBy},</if>
+            <if test="processTime != null">#{processTime},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFeeQuery" parameterType="WebsiteFeeQuery">
+        update website_fee_query
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="elderlyName != null and elderlyName != ''">elderly_name = #{elderlyName},</if>
+            <if test="queryType != null and queryType != ''">query_type = #{queryType},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="queryStatus != null">query_status = #{queryStatus},</if>
+            <if test="queryResult != null">query_result = #{queryResult},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="paidAmount != null">paid_amount = #{paidAmount},</if>
+            <if test="unpaidAmount != null">unpaid_amount = #{unpaidAmount},</if>
+            <if test="queryBy != null">query_by = #{queryBy},</if>
+            <if test="queryTime != null">query_time = #{queryTime},</if>
+            <if test="processBy != null">process_by = #{processBy},</if>
+            <if test="processTime != null">process_time = #{processTime},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where query_id = #{queryId}
+    </update>
+
+    <delete id="deleteWebsiteFeeQueryByQueryId" parameterType="Long">
+        delete from website_fee_query where query_id = #{queryId}
+    </delete>
+
+    <delete id="deleteWebsiteFeeQueryByQueryIds" parameterType="String">
+        delete from website_fee_query where query_id in 
+        <foreach item="queryId" collection="array" open="(" separator="," close=")">
+            #{queryId}
+        </foreach>
+    </delete>
+
+    <update id="processWebsiteFeeQuery" parameterType="WebsiteFeeQuery">
+        update website_fee_query set query_status = '1', process_by = #{processBy}, process_time = now() where query_id = #{queryId}
+    </update>
+
+    <update id="sendWebsiteFeeQuery" parameterType="WebsiteFeeQuery">
+        update website_fee_query set query_status = '2', send_time = now() where query_id = #{queryId}
+    </update>
+</mapper>
+

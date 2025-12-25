@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFacilitiesMapper">
+    
+    <resultMap type="WebsiteFacilities" id="WebsiteFacilitiesResult">
+        <result property="facilityId"    column="facility_id"    />
+        <result property="facilityName"    column="facility_name"    />
+        <result property="facilityType"    column="facility_type"    />
+        <result property="description"    column="description"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="iconClass"    column="icon_class"    />
+        <result property="features"    column="features"    />
+        <result property="area"    column="area"    />
+        <result property="beds"    column="beds"    />
+        <result property="price"    column="price"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="orientation"    column="orientation"    />
+        <result property="floor"    column="floor"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFacilitiesVo">
+        select facility_id, facility_name, facility_type, description, image_url, icon_class, features, area, beds, price, room_type, orientation, floor, sort_order, status, create_by, create_time, update_by, update_time, remark from website_facilities
+    </sql>
+
+    <select id="selectWebsiteFacilitiesList" parameterType="WebsiteFacilities" resultMap="WebsiteFacilitiesResult">
+        <include refid="selectWebsiteFacilitiesVo"/>
+        <where>  
+            <if test="facilityName != null  and facilityName != ''"> and facility_name like concat('%', #{facilityName}, '%')</if>
+            <if test="facilityType != null  and facilityType != ''"> and facility_type = #{facilityType}</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="iconClass != null  and iconClass != ''"> and icon_class = #{iconClass}</if>
+            <if test="features != null  and features != ''"> and features like concat('%', #{features}, '%')</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="beds != null  and beds != ''"> and beds = #{beds}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="roomType != null  and roomType != ''"> and room_type = #{roomType}</if>
+            <if test="orientation != null  and orientation != ''"> and orientation = #{orientation}</if>
+            <if test="floor != null "> and floor = #{floor}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by sort_order asc, create_time desc
+    </select>
+    
+    <select id="selectWebsiteFacilitiesByFacilityId" parameterType="Long" resultMap="WebsiteFacilitiesResult">
+        <include refid="selectWebsiteFacilitiesVo"/>
+        where facility_id = #{facilityId}
+    </select>
+        
+    <insert id="insertWebsiteFacilities" parameterType="WebsiteFacilities" useGeneratedKeys="true" keyProperty="facilityId">
+        insert into website_facilities
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facilityName != null and facilityName != ''">facility_name,</if>
+            <if test="facilityType != null and facilityType != ''">facility_type,</if>
+            <if test="description != null">description,</if>
+            <if test="imageUrl != null">image_url,</if>
+            <if test="iconClass != null">icon_class,</if>
+            <if test="features != null">features,</if>
+            <if test="area != null">area,</if>
+            <if test="beds != null">beds,</if>
+            <if test="price != null">price,</if>
+            <if test="roomType != null">room_type,</if>
+            <if test="orientation != null">orientation,</if>
+            <if test="floor != null">floor,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facilityName != null and facilityName != ''">#{facilityName},</if>
+            <if test="facilityType != null and facilityType != ''">#{facilityType},</if>
+            <if test="description != null">#{description},</if>
+            <if test="imageUrl != null">#{imageUrl},</if>
+            <if test="iconClass != null">#{iconClass},</if>
+            <if test="features != null">#{features},</if>
+            <if test="area != null">#{area},</if>
+            <if test="beds != null">#{beds},</if>
+            <if test="price != null">#{price},</if>
+            <if test="roomType != null">#{roomType},</if>
+            <if test="orientation != null">#{orientation},</if>
+            <if test="floor != null">#{floor},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFacilities" parameterType="WebsiteFacilities">
+        update website_facilities
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facilityName != null and facilityName != ''">facility_name = #{facilityName},</if>
+            <if test="facilityType != null and facilityType != ''">facility_type = #{facilityType},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            <if test="iconClass != null">icon_class = #{iconClass},</if>
+            <if test="features != null">features = #{features},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="beds != null">beds = #{beds},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
+            <if test="orientation != null">orientation = #{orientation},</if>
+            <if test="floor != null">floor = #{floor},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where facility_id = #{facilityId}
+    </update>
+
+    <delete id="deleteWebsiteFacilitiesByFacilityId" parameterType="Long">
+        delete from website_facilities where facility_id = #{facilityId}
+    </delete>
+
+    <delete id="deleteWebsiteFacilitiesByFacilityIds" parameterType="String">
+        delete from website_facilities where facility_id in 
+        <foreach item="facilityId" collection="array" open="(" separator="," close=")">
+            #{facilityId}
+        </foreach>
+    </delete>
+
+    <select id="selectWebsiteFacilitiesByType" parameterType="String" resultMap="WebsiteFacilitiesResult">
+        <include refid="selectWebsiteFacilitiesVo"/>
+        where facility_type = #{facilityType} and status = '0'
+        order by sort_order asc, create_time desc
+    </select>
+</mapper>

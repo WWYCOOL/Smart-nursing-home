@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFeedbackMapper">
+    
+    <resultMap type="WebsiteFeedback" id="WebsiteFeedbackResult">
+        <result property="feedbackId"    column="feedback_id"    />
+        <result property="feedbackType"    column="feedback_type"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="contactName"    column="contact_name"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="contactEmail"    column="contact_email"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="feedbackStatus"    column="feedback_status"    />
+        <result property="priority"    column="priority"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyBy"    column="reply_by"    />
+        <result property="replyTime"    column="reply_time"    />
+        <result property="processBy"    column="process_by"    />
+        <result property="processTime"    column="process_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFeedbackVo">
+        select feedback_id, feedback_type, title, content, contact_name, contact_phone, contact_email, elderly_id, elderly_name, feedback_status, priority, reply_content, reply_by, reply_time, process_by, process_time, create_by, create_time, update_by, update_time, remark from website_feedback
+    </sql>
+
+    <select id="selectWebsiteFeedbackList" parameterType="WebsiteFeedback" resultMap="WebsiteFeedbackResult">
+        <include refid="selectWebsiteFeedbackVo"/>
+        <where>  
+            <if test="feedbackType != null  and feedbackType != ''"> and feedback_type = #{feedbackType}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="contactName != null  and contactName != ''"> and contact_name like concat('%', #{contactName}, '%')</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone like concat('%', #{contactPhone}, '%')</if>
+            <if test="elderlyId != null "> and elderly_id = #{elderlyId}</if>
+            <if test="elderlyName != null  and elderlyName != ''"> and elderly_name like concat('%', #{elderlyName}, '%')</if>
+            <if test="feedbackStatus != null  and feedbackStatus != ''"> and feedback_status = #{feedbackStatus}</if>
+            <if test="priority != null  and priority != ''"> and priority = #{priority}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by priority desc, create_time desc
+    </select>
+    
+    <select id="selectWebsiteFeedbackByFeedbackId" parameterType="Long" resultMap="WebsiteFeedbackResult">
+        <include refid="selectWebsiteFeedbackVo"/>
+        where feedback_id = #{feedbackId}
+    </select>
+        
+    <insert id="insertWebsiteFeedback" parameterType="WebsiteFeedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        insert into website_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedbackType != null and feedbackType != ''">feedback_type,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="contactName != null">contact_name,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="contactEmail != null">contact_email,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="elderlyName != null">elderly_name,</if>
+            <if test="feedbackStatus != null">feedback_status,</if>
+            <if test="priority != null">priority,</if>
+            <if test="replyContent != null">reply_content,</if>
+            <if test="replyBy != null">reply_by,</if>
+            <if test="replyTime != null">reply_time,</if>
+            <if test="processBy != null">process_by,</if>
+            <if test="processTime != null">process_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackType != null and feedbackType != ''">#{feedbackType},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="contactName != null">#{contactName},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="contactEmail != null">#{contactEmail},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="elderlyName != null">#{elderlyName},</if>
+            <if test="feedbackStatus != null">#{feedbackStatus},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="replyContent != null">#{replyContent},</if>
+            <if test="replyBy != null">#{replyBy},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+            <if test="processBy != null">#{processBy},</if>
+            <if test="processTime != null">#{processTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFeedback" parameterType="WebsiteFeedback">
+        update website_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="feedbackType != null and feedbackType != ''">feedback_type = #{feedbackType},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="contactName != null">contact_name = #{contactName},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="contactEmail != null">contact_email = #{contactEmail},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="elderlyName != null">elderly_name = #{elderlyName},</if>
+            <if test="feedbackStatus != null">feedback_status = #{feedbackStatus},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="replyContent != null">reply_content = #{replyContent},</if>
+            <if test="replyBy != null">reply_by = #{replyBy},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+            <if test="processBy != null">process_by = #{processBy},</if>
+            <if test="processTime != null">process_time = #{processTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <delete id="deleteWebsiteFeedbackByFeedbackId" parameterType="Long">
+        delete from website_feedback where feedback_id = #{feedbackId}
+    </delete>
+
+    <delete id="deleteWebsiteFeedbackByFeedbackIds" parameterType="String">
+        delete from website_feedback where feedback_id in 
+        <foreach item="feedbackId" collection="array" open="(" separator="," close=")">
+            #{feedbackId}
+        </foreach>
+    </delete>
+</mapper>

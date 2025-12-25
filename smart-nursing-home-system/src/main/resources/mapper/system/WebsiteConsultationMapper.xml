@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteConsultationMapper">
+    
+    <resultMap type="WebsiteConsultation" id="WebsiteConsultationResult">
+        <result property="consultationId"    column="consultation_id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="relationship"    column="relationship"    />
+        <result property="consultationType"    column="consultation_type"    />
+        <result property="message"    column="message"    />
+        <result property="status"    column="status"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyTime"    column="reply_time"    />
+        <result property="replyUser"    column="reply_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteConsultationVo">
+        select consultation_id, name, phone, relationship, consultation_type, message, status, reply_content, reply_time, reply_user, create_time, update_time, remark from website_consultation
+    </sql>
+
+    <select id="selectWebsiteConsultationList" parameterType="WebsiteConsultation" resultMap="WebsiteConsultationResult">
+        <include refid="selectWebsiteConsultationVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="relationship != null  and relationship != ''"> and relationship = #{relationship}</if>
+            <if test="consultationType != null  and consultationType != ''"> and consultation_type = #{consultationType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="replyUser != null  and replyUser != ''"> and reply_user like concat('%', #{replyUser}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectWebsiteConsultationByConsultationId" parameterType="Long" resultMap="WebsiteConsultationResult">
+        <include refid="selectWebsiteConsultationVo"/>
+        where consultation_id = #{consultationId}
+    </select>
+        
+    <insert id="insertWebsiteConsultation" parameterType="WebsiteConsultation" useGeneratedKeys="true" keyProperty="consultationId">
+        insert into website_consultation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="relationship != null and relationship != ''">relationship,</if>
+            <if test="consultationType != null and consultationType != ''">consultation_type,</if>
+            <if test="message != null and message != ''">message,</if>
+            <if test="status != null">status,</if>
+            <if test="replyContent != null">reply_content,</if>
+            <if test="replyTime != null">reply_time,</if>
+            <if test="replyUser != null">reply_user,</if>
+            <if test="remark != null">remark,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="relationship != null and relationship != ''">#{relationship},</if>
+            <if test="consultationType != null and consultationType != ''">#{consultationType},</if>
+            <if test="message != null and message != ''">#{message},</if>
+            <if test="status != null">#{status},</if>
+            <if test="replyContent != null">#{replyContent},</if>
+            <if test="replyTime != null">#{replyTime},</if>
+            <if test="replyUser != null">#{replyUser},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteConsultation" parameterType="WebsiteConsultation">
+        update website_consultation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="relationship != null and relationship != ''">relationship = #{relationship},</if>
+            <if test="consultationType != null and consultationType != ''">consultation_type = #{consultationType},</if>
+            <if test="message != null and message != ''">message = #{message},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="replyContent != null">reply_content = #{replyContent},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+            <if test="replyUser != null">reply_user = #{replyUser},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where consultation_id = #{consultationId}
+    </update>
+
+    <delete id="deleteWebsiteConsultationByConsultationId" parameterType="Long">
+        delete from website_consultation where consultation_id = #{consultationId}
+    </delete>
+
+    <delete id="deleteWebsiteConsultationByConsultationIds" parameterType="String">
+        delete from website_consultation where consultation_id in 
+        <foreach item="consultationId" collection="array" open="(" separator="," close=")">
+            #{consultationId}
+        </foreach>
+    </delete>
+</mapper>
+
+
+

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteBedMapper">
+
+    <resultMap type="WebsiteBed" id="WebsiteBedResult">
+        <result property="bedId"    column="bed_id"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="price"    column="price"    />
+        <result property="bedStatus"    column="bed_status"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWebsiteBedVo">
+        select bed_id, bed_number, room_id, room_number, elderly_id, price, bed_status, sort_order, create_by, create_time, update_by, update_time, remark from website_bed
+    </sql>
+
+    <select id="selectWebsiteBedList" parameterType="WebsiteBed" resultMap="WebsiteBedResult">
+        <include refid="selectWebsiteBedVo"/>
+        <where>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number = #{bedNumber}</if>
+            <if test="roomNumber != null  and roomNumber != ''"> and room_number = #{roomNumber}</if>
+            <if test="bedStatus != null  and bedStatus != ''"> and bed_status = #{bedStatus}</if>
+            <if test="roomId != null  and roomId != ''"> and room_id = #{roomId}</if>
+        </where>
+    </select>
+
+    <select id="selectWebsiteBedByBedId" parameterType="Long" resultMap="WebsiteBedResult">
+        <include refid="selectWebsiteBedVo"/>
+        where bed_id = #{bedId}
+    </select>
+
+    <insert id="insertWebsiteBed" parameterType="WebsiteBed" useGeneratedKeys="true" keyProperty="bedId">
+        insert into website_bed
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null and bedNumber != ''">bed_number,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="roomNumber != null">room_number,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="price != null">price,</if>
+            <if test="bedStatus != null and bedStatus != ''">bed_status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bedNumber != null and bedNumber != ''">#{bedNumber},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="roomNumber != null">#{roomNumber},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="bedStatus != null and bedStatus != ''">#{bedStatus},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteBed" parameterType="WebsiteBed">
+        update website_bed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bedNumber != null and bedNumber != ''">bed_number = #{bedNumber},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="roomNumber != null">room_number = #{roomNumber},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="bedStatus != null and bedStatus != ''">bed_status = #{bedStatus},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where bed_id = #{bedId}
+    </update>
+
+    <delete id="deleteWebsiteBedByBedId" parameterType="Long">
+        delete from website_bed where bed_id = #{bedId}
+    </delete>
+
+    <delete id="deleteWebsiteBedByBedIds" parameterType="String">
+        delete from website_bed where bed_id in
+        <foreach item="bedId" collection="array" open="(" separator="," close=")">
+            #{bedId}
+        </foreach>
+    </delete>
+</mapper>

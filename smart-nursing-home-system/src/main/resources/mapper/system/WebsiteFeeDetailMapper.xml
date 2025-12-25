@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteFeeDetailMapper">
+
+    <resultMap type="WebsiteFeeDetail" id="WebsiteFeeDetailResult">
+        <result property="detailId"    column="detail_id"    />
+        <result property="queryId"    column="query_id"    />
+        <result property="elderlyId"    column="elderly_id"    />
+        <result property="elderlyName"    column="elderly_name"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="feeName"    column="fee_name"    />
+        <result property="feeAmount"    column="fee_amount"    />
+        <result property="feeDate"    column="fee_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="feeMonth"    column="fee_month"    />
+        <result property="isPaid"    column="is_paid"    />
+        <result property="paidDate"    column="paid_date"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWebsiteFeeDetailVo">
+        select f.detail_id, f.query_id, f.elderly_id, f.fee_type, f.fee_name, f.fee_amount, f.fee_date, f.end_date, f.fee_month, f.is_paid, f.paid_date, f.payment_method, f.remark, f.create_by, f.create_time, f.update_by, f.update_time,
+               e.elderly_name
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+    </sql>
+
+    <select id="selectWebsiteFeeDetailList" parameterType="WebsiteFeeDetail" resultMap="WebsiteFeeDetailResult">
+        <include refid="selectWebsiteFeeDetailVo"/>
+        <where>
+            <if test="queryId != null "> and f.query_id = #{queryId}</if>
+            <if test="elderlyId != null "> and f.elderly_id = #{elderlyId}</if>
+            <if test="elderlyName != null "> and f.elderly_name = #{elderlyName}</if>
+            <if test="feeType != null  and feeType != ''"> and f.fee_type = #{feeType}</if>
+            <if test="feeName != null  and feeName != ''"> and f.fee_name like concat('%', #{feeName}, '%')</if>
+            <if test="feeDate != null "> and f.fee_date = #{feeDate}</if>
+            <if test="feeMonth != null  and feeMonth != ''"> and f.fee_month = #{feeMonth}</if>
+            <if test="isPaid != null  and isPaid != ''"> and f.is_paid = #{isPaid}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and f.payment_method = #{paymentMethod}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(f.fee_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(f.fee_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by f.fee_date desc
+    </select>
+
+    <select id="selectFamilyFeeDetailList" parameterType="WebsiteFeeDetail" resultMap="WebsiteFeeDetailResult">
+        <include refid="selectWebsiteFeeDetailVo"/>
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="feeType != null  and feeType != ''"> and f.fee_type = #{feeType}</if>
+            <if test="feeName != null  and feeName != ''"> and f.fee_name like concat('%', #{feeName}, '%')</if>
+            <if test="feeDate != null "> and f.fee_date = #{feeDate}</if>
+            <if test="feeMonth != null  and feeMonth != ''"> and f.fee_month = #{feeMonth}</if>
+            <if test="isPaid != null  and isPaid != ''"> and f.is_paid = #{isPaid}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and f.payment_method = #{paymentMethod}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(f.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(f.fee_date,'%Y-%m') &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by f.fee_date desc, f.detail_id desc
+    </select>
+
+    <select id="selectWebsiteFeeDetailByDetailId" parameterType="Long" resultMap="WebsiteFeeDetailResult">
+        <include refid="selectWebsiteFeeDetailVo"/>
+        where f.detail_id = #{detailId}
+    </select>
+
+    <select id="selectWebsiteFeeDetailListByQueryId" parameterType="Long" resultMap="WebsiteFeeDetailResult">
+        <include refid="selectWebsiteFeeDetailVo"/>
+        where f.query_id = #{queryId}
+        order by f.fee_date desc
+    </select>
+
+    <insert id="insertWebsiteFeeDetail" parameterType="WebsiteFeeDetail" useGeneratedKeys="true" keyProperty="detailId">
+        insert into website_fee_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="queryId != null and queryId != 0">query_id,</if>
+            <if test="elderlyId != null">elderly_id,</if>
+            <if test="elderlyName != null">elderly_name,</if>
+            <if test="feeType != null and feeType != ''">fee_type,</if>
+            <if test="feeName != null and feeName != ''">fee_name,</if>
+            <if test="feeAmount != null">fee_amount,</if>
+            <if test="feeDate != null">fee_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="feeMonth != null and feeMonth != ''">fee_month,</if>
+            <if test="isPaid != null">is_paid,</if>
+            <if test="paidDate != null">paid_date,</if>
+            <if test="paymentMethod != null and paymentMethod != ''">payment_method,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="queryId != null and queryId != 0">#{queryId},</if>
+            <if test="elderlyId != null">#{elderlyId},</if>
+            <if test="elderlyName != null">#{elderlyName},</if>
+            <if test="feeType != null and feeType != ''">#{feeType},</if>
+            <if test="feeName != null and feeName != ''">#{feeName},</if>
+            <if test="feeAmount != null">#{feeAmount},</if>
+            <if test="feeDate != null">#{feeDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="feeMonth != null and feeMonth != ''">#{feeMonth},</if>
+            <if test="isPaid != null">#{isPaid},</if>
+            <if test="paidDate != null">#{paidDate},</if>
+            <if test="paymentMethod != null and paymentMethod != ''">#{paymentMethod},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebsiteFeeDetail" parameterType="WebsiteFeeDetail">
+        update website_fee_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="elderlyName != null">#{elderlyName},</if>
+            <if test="queryId != null">query_id = #{queryId},</if>
+            <if test="elderlyId != null">elderly_id = #{elderlyId},</if>
+            <if test="feeType != null and feeType != ''">fee_type = #{feeType},</if>
+            <if test="feeName != null and feeName != ''">fee_name = #{feeName},</if>
+            <if test="feeAmount != null">fee_amount = #{feeAmount},</if>
+            <if test="feeDate != null">fee_date = #{feeDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="feeMonth != null and feeMonth != ''">fee_month = #{feeMonth},</if>
+            <if test="isPaid != null">is_paid = #{isPaid},</if>
+            <if test="paidDate != null">paid_date = #{paidDate},</if>
+            <if test="paymentMethod != null and paymentMethod != ''">payment_method = #{paymentMethod},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where detail_id = #{detailId}
+    </update>
+
+    <delete id="deleteWebsiteFeeDetailByDetailId" parameterType="Long">
+        delete from website_fee_detail where detail_id = #{detailId}
+    </delete>
+
+    <delete id="deleteWebsiteFeeDetailByDetailIds" parameterType="String">
+        delete from website_fee_detail where detail_id in
+        <foreach item="detailId" collection="array" open="(" separator="," close=")">
+            #{detailId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWebsiteFeeDetailByQueryId" parameterType="Long">
+        delete from website_fee_detail where query_id = #{queryId}
+    </delete>
+
+    <insert id="batchInsertWebsiteFeeDetail" parameterType="java.util.List">
+        insert into website_fee_detail (query_id, elderly_id, fee_type, fee_name, fee_amount, fee_date, fee_month, is_paid, paid_date, payment_method, remark, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.queryId}, #{item.elderlyId}, #{item.feeType}, #{item.feeName}, #{item.feeAmount}, #{item.feeDate}, #{item.feeMonth}, #{item.isPaid}, #{item.paidDate}, #{item.paymentMethod}, #{item.remark}, #{item.createBy}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <!-- 家属费用统计相关查询 -->
+    <select id="getFamilyTotalAmount" parameterType="WebsiteFeeDetail" resultType="Double">
+        select COALESCE(SUM(f.fee_amount), 0) as total_amount
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="feeType != null and feeType != ''"> and f.fee_type = #{feeType}</if>
+            <if test="isPaid != null and isPaid != ''"> and f.is_paid = #{isPaid}</if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &lt;= #{params.endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getFamilyPaidAmount" parameterType="WebsiteFeeDetail" resultType="Double">
+        select COALESCE(SUM(f.fee_amount), 0) as paid_amount
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            and f.is_paid = '1'
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="feeType != null and feeType != ''"> and f.fee_type = #{feeType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &lt;= #{params.endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getFamilyUnpaidAmount" parameterType="WebsiteFeeDetail" resultType="Double">
+        select COALESCE(SUM(f.fee_amount), 0) as unpaid_amount
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            and f.is_paid = '0'
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="feeType != null and feeType != ''"> and f.fee_type = #{feeType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &lt;= #{params.endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getFamilyFeeTypeStatistics" parameterType="WebsiteFeeDetail" resultType="Map">
+        select
+            f.fee_type,
+            COALESCE(SUM(f.fee_amount), 0) as amount,
+            ROUND(COALESCE(SUM(f.fee_amount), 0) / (select COALESCE(SUM(f2.fee_amount), 1)
+                from website_fee_detail f2
+                left join website_elderly_info e2 on f2.elderly_id = e2.elderly_id
+                left join website_family_elderly_relation r2 on e2.elderly_id = r2.elderly_id
+                where r2.family_id = #{familyId}
+                <if test="elderlyId != null"> and f2.elderly_id = #{elderlyId}</if>
+                <if test="params.beginTime != null and params.beginTime != ''">
+                    and date_format(f2.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+                </if>
+                <if test="params.endTime != null and params.endTime != ''">
+                    and date_format(f2.fee_date,'%Y-%m') &lt;= #{params.endTime}
+                </if>
+            ) * 100, 2) as percentage
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and date_format(f.fee_date,'%Y-%m') &lt;= #{params.endTime}
+            </if>
+        </where>
+        group by f.fee_type
+        order by amount desc
+    </select>
+
+    <select id="getFamilyMonthlyFee" parameterType="WebsiteFeeDetail" resultType="Map">
+        select
+            f.fee_month as month,
+            COALESCE(SUM(f.fee_amount), 0) as total_amount,
+            COALESCE(SUM(case when f.is_paid = '1' then f.fee_amount else 0 end), 0) as paid_amount,
+            COALESCE(SUM(case when f.is_paid = '0' then f.fee_amount else 0 end), 0) as unpaid_amount
+        from website_fee_detail f
+        left join website_elderly_info e on f.elderly_id = e.elderly_id
+        left join website_family_elderly_relation r on e.elderly_id = r.elderly_id
+        <where>
+            r.family_id = #{familyId}  <!-- 使用familyId参数 -->
+            <if test="elderlyId != null"> and f.elderly_id = #{elderlyId}</if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and f.fee_month &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and f.fee_month &lt;= #{params.endTime}
+            </if>
+        </where>
+        group by f.fee_month
+        order by f.fee_month desc
+    </select>
+
+    <!-- 更新支付状态 -->
+    <update id="updatePaymentStatus">
+        update website_fee_detail
+        set is_paid = '1',
+            paid_date = NOW(),
+            payment_method = #{paymentMethod},
+            update_time = NOW()
+        where detail_id = #{detailId}
+    </update>
+</mapper>

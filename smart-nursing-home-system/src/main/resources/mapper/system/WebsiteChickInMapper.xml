@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smartnursinghome.system.mapper.WebsiteChickInMapper">
+
+    <resultMap id="ElderlyResidenceVoResult" type="com.smartnursinghome.system.domain.vo.ElderlyResidenceVo">
+        <result property="checkInId" column="check_in_id"/>
+        <result property="elderlyName" column="elderly_name"/>
+        <result property="type" column="type"/>
+        <result property="checkInTime" column="check_in_time"/>
+        <result property="roomNumber" column="room_number"/>
+        <result property="bedNumber" column="bed_number"/>
+        <result property="remark" column="remark"/>
+        <result property="idCard" column="id_card"/>
+    </resultMap>
+    <insert id="chickIn">
+        insert into website_check_in(elderly_id, type, check_in_time, room_number, bed_number, remark)
+        values (#{elderlyId}, #{type}, #{checkInTime}, #{roomNumber}, #{bedNumber}, #{remark})
+    </insert>
+
+    <select id="selectWebsiteChickInList" resultMap="ElderlyResidenceVoResult">
+        SELECT check_in_id,
+               elderly_name,
+               type,
+               check_in_time,
+               e.room_number,
+               e.bed_number,
+               c.remark,
+               e.id_card
+        FROM website_check_in c
+                 JOIN website_elderly_info e ON c.elderly_id = e.elderly_id
+    </select>
+</mapper>
